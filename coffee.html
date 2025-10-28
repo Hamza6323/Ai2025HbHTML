@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HB's Coffees - Premium Coffee Online</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f1ed;
+            color: #333;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, #6f4e37 0%, #8b5a3c 100%);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .cart-icon {
+            background: #d4a574;
+            color: #6f4e37;
+            padding: 0.7rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .cart-icon:hover {
+            background: #e8c5a0;
+            transform: scale(1.05);
+        }
+
+        .cart-count {
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #8b5a3c 0%, #6f4e37 100%);
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Category Filter */
+        .categories {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .category-btn {
+            padding: 0.7rem 1.5rem;
+            border: 2px solid #8b5a3c;
+            background: white;
+            color: #8b5a3c;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: #8b5a3c;
+            color: white;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #d4a574 0%, #c0956c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-category {
+            font-size: 0.8rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #6f4e37;
+        }
+
+        .product-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #8b5a3c;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: #8b5a3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #6f4e37;
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: right 0.3s;
+            overflow-y: auto;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            background: #8b5a3c;
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            padding: 1.5rem;
+            min-height: 400px;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            color: #6f4e37;
+        }
+
+        .cart-item-price {
+            color: #8b5a3c;
+            font-weight: bold;
+        }
+
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .qty-btn {
+            background: #f5f1ed;
+            border: none;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .remove-item {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 2px solid #eee;
+            background: #f9f7f5;
+        }
+
+        .cart-total {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #6f4e37;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            background: #8b5a3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background: #6f4e37;
+        }
+
+        /* Checkout Page */
+        .checkout-container {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .checkout-container.active {
+            display: block;
+        }
+
+        .checkout-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .checkout-header h2 {
+            color: #6f4e37;
+            margin-bottom: 0.5rem;
+        }
+
+        .checkout-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .order-summary {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .order-summary h3 {
+            color: #6f4e37;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #d4a574;
+            padding-bottom: 0.5rem;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-item-name {
+            font-weight: bold;
+        }
+
+        .order-item-qty {
+            color: #999;
+            margin: 0 1rem;
+        }
+
+        .order-subtotal {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            font-weight: bold;
+            color: #6f4e37;
+        }
+
+        .order-tax {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            color: #666;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-top: 2px solid #8b5a3c;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #6f4e37;
+        }
+
+        .checkout-form {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .checkout-form h3 {
+            color: #6f4e37;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #d4a574;
+            padding-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #6f4e37;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #8b5a3c;
+            box-shadow: 0 0 5px rgba(139, 90, 60, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .payment-option {
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .payment-option input {
+            display: none;
+        }
+
+        .payment-option input:checked + label {
+            display: block;
+        }
+
+        .payment-option:has(input:checked) {
+            border-color: #8b5a3c;
+            background: #f5f1ed;
+        }
+
+        .payment-option label {
+            cursor: pointer;
+            display: block;
+            font-weight: bold;
+            color: #6f4e37;
+        }
+
+        .place-order-btn {
+            width: 100%;
+            padding: 1rem;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .place-order-btn:hover {
+            background: #229954;
+        }
+
+        .back-to-shop {
+            background: #8b5a3c;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .back-to-shop:hover {
+            background: #6f4e37;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #27ae60;
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            display: none;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .checkout-content {
+                grid-template-columns: 1fr;
+            }
+
+            .categories {
+                justify-content: flex-start;
+                overflow-x: auto;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">☕ HB's Coffees</a>
+            <div class="cart-icon" id="cartIcon">
+                Cart <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Welcome to HB's Coffees</h1>
+        <p>Premium quality coffee, freshly brewed for you</p>
+    </div>
+
+    <!-- Shop Page -->
+    <div id="shopPage">
+        <div class="container">
+            <!-- Category Filter -->
+            <div class="categories">
+                <button class="category-btn active" data-category="all">All Coffees</button>
+                <button class="category-btn" data-category="espresso">Espresso</button>
+                <button class="category-btn" data-category="latte">Lattes</button>
+                <button class="category-btn" data-category="cappuccino">Cappuccinos</button>
+                <button class="category-btn" data-category="cold">Cold Brew</button>
+                <button class="category-btn" data-category="specialty">Specialty</button>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid" id="productsGrid"></div>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" id="closeCart">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="empty-cart">Your cart is empty</div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">Total: $<span id="cartTotalPrice">0.00</span></div>
+            <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Checkout Page -->
+    <div class="checkout-container" id="checkoutPage">
+        <button class="back-to-shop" id="backToShop">← Back to Shop</button>
+        
+        <div class="success-message" id="successMessage">
+            ✓ Order placed successfully! Thank you for your purchase.
+        </div>
+
+        <div class="checkout-header">
+            <h2>Checkout</h2>
+            <p>Complete your order</p>
+        </div>
+
+        <div class="checkout-content">
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div id="checkoutOrderItems"></div>
+                <div class="order-subtotal">
+                    <span>Subtotal:</span>
+                    <span>$<span id="subtotalPrice">0.00</span></span>
+                </div>
+                <div class="order-tax">
+                    <span>Tax (10%):</span>
+                    <span>$<span id="taxPrice">0.00</span></span>
+                </div>
+                <div class="order-total">
+                    <span>Total:</span>
+                    <span>$<span id="totalPrice">0.00</span></span>
+                </div>
+            </div>
+
+            <!-- Checkout Form -->
+            <div class="checkout-form">
+                <h3>Delivery Information</h3>
+                <form id="checkoutForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Address</label>
+                        <input type="text" name="address" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" name="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Postal Code</label>
+                            <input type="text" name="postalCode" required>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 1.5rem; border-bottom: 2px solid #d4a574; padding-bottom: 0.5rem; color: #6f4e37;">Payment Method</h3>
+                    <div class="payment-methods">
+                        <div class="payment-option">
+                            <input type="radio" id="card" name="payment" value="card" checked>
+                            <label for="card">💳 Credit Card</label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" id="paypal" name="payment" value="paypal">
+                            <label for="paypal">🅿️ PayPal</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="place-order-btn">Place Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Product Database
+        const products = [
+            // Espresso
+            {id: 1, name: "Single Espresso", category: "espresso", price: 2.50, emoji: "☕", desc: "Pure, concentrated espresso shot"},
+            {id: 2, name: "Double Espresso", category: "espresso", price: 3.50, emoji: "☕☕", desc: "Two shots of bold espresso"},
+            {id: 3, name: "Espresso Con Panna", category: "espresso", price: 3.75, emoji: "☕", desc: "Espresso topped with whipped cream"},
+            
+            // Latte
+            {id: 4, name: "Classic Latte", category: "latte", price: 4.50, emoji: "🥛", desc: "Smooth espresso with steamed milk"},
+            {id: 5, name: "Vanilla Latte", category: "latte", price: 5.00, emoji: "🥛", desc: "Creamy latte with vanilla syrup"},
+            {id: 6, name: "Caramel Latte", category: "latte", price: 5.25, emoji: "🥛", desc: "Rich latte with sweet caramel"},
+            
+            // Cappuccino
+            {id: 7, name: "Classic Cappuccino", category: "cappuccino", price: 4.75, emoji: "☕", desc: "Equal parts espresso, milk, foam"},
+            {id: 8, name: "Cinnamon Cappuccino", category: "cappuccino", price: 5.00, emoji: "☕", desc: "Cappuccino with cinnamon spice"},
+            {id: 9, name: "Chocolate Cappuccino", category: "cappuccino", price: 5.50, emoji: "🍫", desc: "Cappuccino with rich chocolate"},
+            
+            // Cold Brew
+            {id: 10, name: "Cold Brew", category: "cold", price: 3.75, emoji: "🧊", desc: "Smooth, chilled coffee concentrate"},
+            {id: 11, name: "Iced Latte", category: "cold", price: 4.75, emoji: "🧊", desc: "Cold espresso with iced milk"},
+            {id: 12, name: "Cold Brew Float", category: "cold", price: 5.50, emoji: "🧊", desc: "Cold brew with vanilla ice cream"},
+            
+            // Specialty
+            {id: 13, name: "Affogato", category: "specialty", price: 4.50, emoji: "🍨", desc: "Espresso poured over ice cream"},
+            {id: 14, name: "Mocha", category: "specialty", price: 5.25, emoji: "🍫", desc: "Espresso, milk, and chocolate"},
+            {id: 15, name: "Cortado", category: "specialty", price: 4.00, emoji: "☕", desc: "Balanced espresso and steamed milk"}
+        ];
+
+        let cart = [];
+        let currentCategory = "all";
+
+        // Initialize
+        $(document).ready(function() {
+            displayProducts("all");
+            setupEventListeners();
+        });
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Category buttons
+            $(".category-btn").click(function() {
+                currentCategory = $(this).data("category");
+                $(".category-btn").removeClass("active");
+                $(this).addClass("active");
+                displayProducts(currentCategory);
+            });
+
+            // Cart icon
+            $("#cartIcon").click(function() {
+                $("#cartSidebar").toggleClass("open");
+                $("#overlay").toggleClass("active");
+            });
+
+            // Close cart
+            $("#closeCart").click(function() {
+                $("#cartSidebar").removeClass("open");
+                $("#overlay").removeClass("active");
+            });
+
+            // Close cart when clicking outside
+            $(document).click(function(e) {
+                if (!$(e.target).closest("#cartSidebar, #cartIcon").length) {
+                    $("#cartSidebar").removeClass("open");
+                    $("#overlay").removeClass("active");
+                }
+            });
+
+            // Checkout button
+            $("#checkoutBtn").click(function() {
+                if (cart.length > 0) {
+                    $("#shopPage").hide();
+                    $("#cartSidebar").removeClass("open");
+                    $("#overlay").removeClass("active");
+                    $("#checkoutPage").addClass("active");
+                    displayCheckout();
+                }
+            });
+
+            // Back to shop
+            $("#backToShop").click(function() {
+                $("#checkoutPage").removeClass("active");
+                $("#shopPage").show();
+                clearForm();
+            });
+
+            // Form submission
+            $("#checkoutForm").submit(function(e) {
+                e.preventDefault();
+                submitOrder();
+            });
+
+            // Overlay close
+            $("#overlay").click(function() {
+                $("#cartSidebar").removeClass("open");
+                $("#overlay").removeClass("active");
+            });
+        }
+
+        // Display products
+        function displayProducts(category) {
+            const filtered = category === "all" ? products : products.filter(p => p.category === category);
+            let html = "";
+
+            filtered.forEach(product => {
+                html += `
+                    <div class="product-card">
+                        <div class="product-image">${product.emoji}</div>
+                        <div class="product-info">
+                            <div class="product-category">${product.category}</div>
+                            <h3 class="product-name">${product.name}</h3>
+                            <p class="product-desc">${product.desc}</p>
+                            <div class="product-price">$${product.price.toFixed(2)}</div>
+                            <button class="add-to-cart-btn" onclick="addToCart(${product.id})">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            $("#productsGrid").html(html);
+        }
+
+        // Add to cart
+        window.addToCart = function(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({...product, quantity: 1});
+            }
+
+            updateCart();
+        };
+
+        // Update cart display
+        function updateCart() {
+            $("#cartCount").text(cart.length);
+            let cartHtml = "";
+
+            if (cart.length === 0) {
+                cartHtml = '<div class="empty-cart">Your cart is empty</div>';
+            } else {
+                cart.forEach(item => {
+                    cartHtml += `
+                        <div class="cart-item">
+                            <div class="cart-item-info">
+                                <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                                <div class="cart-item-qty">
+                                    <button class="qty-btn" onclick="updateQty(${item.id}, -1)">−</button>
+                                    <span>${item.quantity}</span>
+                                    <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                                    <button class="remove-item" onclick="removeFromCart(${item.id})">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            $("#cartItems").html(cartHtml);
+            updateCartTotal();
+        }
+
+        // Update quantity
+        window.updateQty = function(productId, change) {
+            const item = cart.find(p => p.id === productId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    updateCart();
+                }
+            }
+        };
+
+        // Remove from cart
+        window.removeFromCart = function(productId) {
+            cart = cart.filter(p => p.id !== productId);
+            updateCart();
+        };
+
+        // Update cart total
+        function updateCartTotal() {
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            $("#cartTotalPrice").text(total.toFixed(2));
+        }
+
+        // Display checkout
+        function displayCheckout() {
+            let orderHtml = "";
+            cart.forEach(item => {
+                const itemTotal = (item.price * item.quantity).toFixed(2);
+                orderHtml += `
+                    <div class="order-item">
+                        <span class="order-item-name">${item.name}</span>
+                        <span class="order-item-qty">x${item.quantity}</span>
+                        <span>${itemTotal}</span>
+                    </div>
+                `;
+            });
+
+            $("#checkoutOrderItems").html(orderHtml);
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.10;
+            const total = subtotal + tax;
+
+            $("#subtotalPrice").text(subtotal.toFixed(2));
+            $("#taxPrice").text(tax.toFixed(2));
+            $("#totalPrice").text(total.toFixed(2));
+        }
+
+        // Submit order
+        function submitOrder() {
+            const formData = {
+                name: $("input[name='name']").val(),
+                email: $("input[name='email']").val(),
+                phone: $("input[name='phone']").val(),
+                address: $("input[name='address']").val(),
+                city: $("input[name='city']").val(),
+                postalCode: $("input[name='postalCode']").val(),
+                payment: $("input[name='payment']:checked").val(),
+                cart: cart,
+                total: $("#totalPrice").text()
+            };
+
+            // Show success message
+            $("#successMessage").addClass("show");
+            setTimeout(() => {
+                // Reset everything
+                cart = [];
+                clearForm();
+                $("#successMessage").removeClass("show");
+                $("#checkoutPage").removeClass("active");
+                $("#shopPage").show();
+                updateCart();
+                $(".category-btn").first().click();
+            }, 3000);
+        }
+
+        // Clear form
+        function clearForm() {
+            $("#checkoutForm")[0].reset();
+            cart = [];
+            updateCart();
+        }
+    </script>
+</body>
+</html>
